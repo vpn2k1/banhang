@@ -37,6 +37,16 @@ describe('VietQR', () => {
     expect(payload.slice(-4)).toBe(crc16(payload.slice(0, -4)));
   });
 
+  it('QR tĩnh: không số tiền, không nội dung, point of initiation "11"', () => {
+    const payload = buildVietQrPayload({ bin: '970436', accountNumber: '0123 456 789' });
+    const top = parse(payload);
+    expect(top['01']).toBe('11');
+    expect(top['54']).toBeUndefined();
+    expect(top['62']).toBeUndefined();
+    expect(parse(parse(top['38'])['01'])).toEqual({ '00': '970436', '01': '0123456789' });
+    expect(payload.slice(-4)).toBe(crc16(payload.slice(0, -4)));
+  });
+
   it('nội dung bỏ dấu / ký tự đặc biệt', () => {
     expect(sanitizeContent('Thanh toán HĐ #12')).toBe('Thanh toan HD 12');
     expect(transferContent('HD260925-003')).toBe('HD260925003');

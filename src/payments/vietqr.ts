@@ -3,7 +3,7 @@
  * App ngân hàng nào ở Việt Nam cũng quét được: điền sẵn tài khoản, số tiền, nội dung.
  *
  * Cấu trúc TLV (id 2 số + độ dài 2 số + giá trị):
- *   00 Payload format "01" · 01 "12" (QR động, có số tiền)
+ *   00 Payload format "01" · 01 "12" (QR động, có số tiền) hoặc "11" (QR tĩnh, khách tự nhập số tiền)
  *   38 Thông tin người nhận: 00 GUID NAPAS · 01 (00 BIN ngân hàng · 01 số tài khoản) · 02 "QRIBFTTA"
  *   53 "704" (VND) · 54 số tiền · 58 "VN" · 62 (08 nội dung chuyển khoản) · 63 CRC16
  */
@@ -12,9 +12,10 @@ export interface VietQrInput {
   /** Mã BIN ngân hàng (6 số), VD Vietcombank 970436 */
   bin: string;
   accountNumber: string;
-  amount: number;
+  /** Bỏ trống → QR tĩnh (chỉ có tài khoản, khách tự nhập số tiền) */
+  amount?: number;
   /** Nội dung chuyển khoản – nên ngắn, không dấu */
-  content: string;
+  content?: string;
 }
 
 const NAPAS_GUID = 'A000000727';
@@ -55,18 +56,18 @@ export function buildVietQrPayload({ bin, accountNumber, amount, content }: Viet
   if (!/^\d{6}$/.test(bin)) throw new Error('Mã BIN ngân hàng phải gồm 6 chữ số');
   const account = accountNumber.replace(/\s/g, '');
   if (!/^[0-9A-Za-z]{4,19}$/.test(account)) throw new Error('Số tài khoản không hợp lệ');
-  if (!Number.isInteger(amount) || amount <= 0) throw new Error('Số tiền không hợp lệ');
+  if (amount !== undefined && (!Number.isInteger(amount) || amount <= 0)) throw new Error('Số tiền không hợp lệ');
 
   const beneficiary = tlv('00', bin) + tlv('01', account);
   const merchant = tlv('00', NAPAS_GUID) + tlv('01', beneficiary) + tlv('02', SERVICE_ACCOUNT);
-  const note = sanitizeContent(content);
+  const note = sanitizeContent(content ?? '');
 
   const body =
     tlv('00', '01') +
-    tlv('01', '12') +
+    tlv('01', amount === undefined ? '11' : '12') +
     tlv('38', merchant) +
     tlv('53', '704') +
-    tlv('54', String(amount)) +
+    (amount === undefined ? '' : tlv('54', String(amount))) +
     tlv('58', 'VN') +
     (note ? tlv('62', tlv('08', note)) : '') +
     '6304';

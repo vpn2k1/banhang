@@ -14,6 +14,7 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   bankBin: '',
   bankAccount: '',
   bankAccountName: '',
+  qrOnEveryReceipt: true,
 };
 
 function load(): StoreSettings {

@@ -150,6 +150,8 @@ export interface StoreSettings {
   bankBin: string;
   bankAccount: string;
   bankAccountName: string;
+  /** In QR tài khoản (không kèm số tiền) trên mọi hoá đơn, kể cả tiền mặt. */
+  qrOnEveryReceipt: boolean;
 }
 
 export type PageKey = 'import' | 'invoice' | 'inventory' | 'statistics' | 'history';

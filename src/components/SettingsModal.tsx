@@ -136,6 +136,18 @@ export function SettingsModal({ settings, onClose, onSave }: Props) {
                 />
               </label>
             </div>
+            <label className="checkbox">
+              <input
+                type="checkbox"
+                checked={form.qrOnEveryReceipt}
+                onChange={(e) => set('qrOnEveryReceipt', e.target.checked)}
+              />
+              In mã QR tài khoản trên mọi hoá đơn
+            </label>
+            <p className="muted small">
+              Hoá đơn tiền mặt / đã thanh toán in QR không kèm số tiền (khách tự nhập). Hoá đơn chờ chuyển khoản luôn in QR
+              có sẵn số tiền.
+            </p>
             {testQr && (
               <div className="test-qr">
                 <QrCode value={testQr} size="120px" />

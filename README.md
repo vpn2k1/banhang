@@ -45,6 +45,7 @@ Mẹo nhập liệu:
 3. Màn QR hiện mã to cho khách quét (có thể **in phiếu có QR**). Mã điền sẵn tài khoản, số tiền, nội dung = số hoá đơn (VD `HD260925004`).
 4. Người bán xem thông báo tiền về trên app ngân hàng → **✅ Đã nhận tiền** → hoá đơn thành *Đã thanh toán*. Hoặc **Để sau**: hoá đơn nằm ở khung *⏳ Chờ chuyển khoản* bên phải màn Hóa đơn và trong 🕘 Lịch sử. Khách không trả → **Huỷ hoá đơn** (hoàn lại tồn kho).
 
+- **QR trên mọi hoá đơn** (Cài đặt → *In mã QR tài khoản trên mọi hoá đơn*, bật mặc định): hoá đơn tiền mặt / đã thanh toán in QR tĩnh tài khoản cửa hàng (không kèm số tiền, khách tự nhập) để lần sau khách chuyển khoản; hoá đơn chờ chuyển khoản vẫn in QR có sẵn số tiền + nội dung; hoá đơn đã huỷ không in QR.
 - Mã VietQR (chuẩn EMVCo / NAPAS 247) được tạo **offline** trong `src/payments/vietqr.ts`, không gọi API.
 - Thống kê: doanh thu chỉ tính hoá đơn đã thanh toán (tách tiền mặt / chuyển khoản); hoá đơn chờ chuyển khoản hiện riêng; hoá đơn đã huỷ không tính.
 - **Tự kiểm tra tiền về** (SePay, Casso, PayOS...): chưa bật. Chỗ cắm là `src/payments/transferWatcher.ts` – cài một `TransferWatcher` (gọi API dịch vụ từ Electron main process để giữ API key) thì màn QR tự hỏi mỗi 5 giây và tự xác nhận. Đối soát theo số tiền + nội dung chuyển khoản.

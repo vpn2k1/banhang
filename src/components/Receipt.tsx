@@ -1,6 +1,6 @@
 import type { InvoiceDetail, StoreSettings } from '../types';
 import { formatDateTime, formatNumber } from '../lib/format';
-import { invoiceQr } from '../payments/invoiceQr';
+import { invoiceQr, storeQr } from '../payments/invoiceQr';
 import { QrCode } from './QrCode';
 
 interface Props {
@@ -19,6 +19,12 @@ export function Receipt({ invoice, settings, preview }: Props) {
   const transfer = invoice.payment_method === 'transfer';
   const qr = transfer && invoice.status === 'pending' && !preview ? invoiceQr(invoice, settings) : null;
   const qrSize = settings.paperWidth === 58 ? '36mm' : '46mm';
+  // Hoá đơn không có QR chờ trả: in QR tài khoản cửa hàng (không kèm số tiền) nếu bật trong Cài đặt
+  const shopQr =
+    settings.qrOnEveryReceipt && invoice.status !== 'cancelled' && !(transfer && invoice.status === 'pending')
+      ? storeQr(settings)
+      : null;
+  const shopQrSize = settings.paperWidth === 58 ? '28mm' : '34mm';
 
   return (
     <div className={`receipt paper-${settings.paperWidth}`}>
@@ -95,6 +101,17 @@ export function Receipt({ invoice, settings, preview }: Props) {
           ) : (
             <div className="r-center">(Chưa cài đặt tài khoản ngân hàng)</div>
           )}
+        </div>
+      )}
+
+      {shopQr && (
+        <div className="r-qr">
+          <div className="r-line" />
+          <div className="r-center r-bold">QUÉT MÃ ĐỂ CHUYỂN KHOẢN</div>
+          <QrCode value={shopQr.payload} size={shopQrSize} className="r-qr-img" />
+          <div className="r-center">{shopQr.bank}</div>
+          <div className="r-center r-bold">{shopQr.account}</div>
+          {shopQr.accountName && <div className="r-center">{shopQr.accountName}</div>}
         </div>
       )}
 
