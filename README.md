@@ -71,11 +71,11 @@ Máy quét được giả lập bằng cách gõ mã + Enter, ví dụ `89312345
 npm run electron:dev     # Vite dev server + cửa sổ Electron (hot reload)
 npm run electron:start   # build rồi chạy như bản thật
 npm run dist:mac         # đóng gói release/GroceryPOS-x.y.z.dmg
-npm run dist:win         # đóng gói installer Windows (NSIS) – nên chạy trên máy Windows
+npm run dist:win         # đóng gói release/GroceryPOS Setup x.y.z.exe (NSIS, Windows x64) – build được cả trên Mac
 ```
 
 - **In thẳng, không hộp thoại**: ⚙️ Cài đặt → *Máy in hoá đơn* chọn máy in (hoặc máy in mặc định của hệ thống) → **🖨 In thử**. Khổ giấy = 58/80mm theo cài đặt, chiều cao tự tính theo độ dài hoá đơn (+10mm để xé) nên máy in nhiệt không đẩy giấy thừa. Máy in tắt / rút cáp → thông báo lỗi kèm nút mở Cài đặt.
-- Máy in cần được **cài driver trên hệ điều hành** (hiện trong danh sách máy in của macOS / Windows).
+- Máy in cần được **cài driver trên hệ điều hành** (hiện trong danh sách máy in của macOS / Windows). Hướng dẫn chi tiết (cài driver, cài đặt trong app, xử lý sự cố): [docs/may-in-hoa-don.md](docs/may-in-hoa-don.md).
 - Bản trình duyệt vẫn in bằng hộp thoại của trình duyệt như cũ (`src/device/printer.ts` tự chọn).
 - Giao diện được phục vụ qua giao thức `app://pos` (không dùng `file://`) để SQLite WASM tải được `.wasm` và dữ liệu IndexedDB giữ qua các lần mở app. Cửa sổ chạy với `contextIsolation` + `sandbox`; giao diện chỉ gọi được `window.posDevice` (danh sách máy in, in hoá đơn).
 - Chưa ký số (code signing): lần đầu mở trên macOS cần chuột phải → *Open*; Windows SmartScreen có thể cảnh báo.

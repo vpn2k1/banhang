@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "description": "Grocery POS MVP – ứng dụng bán hàng đơn giản cho cửa hàng tạp hoá",
+  "author": "Grocery POS",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -60,7 +61,12 @@
     },
     "win": {
       "target": [
-        "nsis"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
       ]
     },
     "nsis": {
